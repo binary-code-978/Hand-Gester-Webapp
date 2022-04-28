@@ -11,7 +11,7 @@ Webcam.attach('#camera');
 
 function take_snapshot() {
     Webcam.snap(function (data_uri) {
-        document.getElementById("results").innerHTML = '<img id="captured_image" src="' + data_uri + '"/>';
+        document.getElementById("result").innerHTML = '<img id="captured_image" src="' + data_uri + '"/>';
     });
 }
 
@@ -24,8 +24,39 @@ function modelLoaded() {
 
 function speak() {
     var synth = window.speechSynthesis;
-    speak_data_1 = "The first Prediction is " + prediction_1;
-    speak_data_2 = "And the Second Prediction is " + prediction_2;
-    var utterThis = new SpeechSynthesis(speak_data_1 + speak_data_2);
+    speak_data_1 = "The Prediction is " + prediction;
+    var utterThis = new SpeechSynthesisUtterance(speak_data);
     synth.speak(utterThis);
+}
+
+function check() {
+    img = document.getElementById("image_captured");
+    classifier.classify(img, gotResults);
+}
+
+function gotResults(error, results) {
+    if (error) {
+        console.error(error);
+    }
+    else {
+        document.getElementById("result_gesture_name").innerHTML = results[0].label;
+        prediction = results[0].label;
+        speak();
+        if (results[0].label == "Okay") {
+            document.getElementById("result_emoji").innerHTML = "&#58400;";
+        }
+
+        if (results[0].label == "Peace Sign") {
+            document.getElementById("result_emoji").innerHTML = "&#57361;";
+        }
+
+        if (results[0].label == "High Five") {
+            document.getElementById("result_emoji").innerHTML = "&#128400;";
+        }
+
+        if (results[0].label == "Fist Bump") {
+            document.getElementById("result_emoji").innerHTML = "&#57357;";
+        }
+
+    }
 }
